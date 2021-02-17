@@ -1,0 +1,142 @@
+from random import choice, randint
+from time import sleep
+
+l = '-'*30
+red = '\033[31m'
+y = '\033[33m'
+n = '\033[m'
+
+
+def quebra():
+    print('\n'*50)
+
+
+def titulo():
+    print(f'                {l}')
+    print(f'\033[33m{"                         JOGO DA VELHA":^30}\033[m')
+    print(f'                {l}')
+
+
+def vitoria():
+    print(f'                {l}')
+    print(f'\033[32m{"                            VITÓRIA":^30}\033[m')
+    print(f'                {l}')
+
+
+def derrota():
+    print(f'                {l}')
+    print(f'\033[31m{"                            DERROTA":^30}\033[m')
+    print(f'                {l}')
+
+
+def jogo():
+    x = f'''                 
+                         1  │  2  │  3
+                       ――――――――――
+                         4  │  5  │  6
+                       ――――――――――
+                         7  │  8  │  9
+    '''
+
+    seq = (0, 1)
+    op = ['X', 'O']
+    escR = choice(seq)
+    robo = op[escR]
+
+    if escR == 0:
+        marcador = op[1]
+
+    else:
+        marcador = op[0]
+
+    listJOGADAS = []
+    lP = []
+    lR = []
+    win_player = False
+    win_robo = False
+    while True:
+        quebra()
+        titulo()
+        print(f'                       Seu marcador: "\033[33m{marcador}\033[m"')
+        print('\n\n')
+        print(x)
+
+        #player
+        while True:
+            esc = str(input('\033[33mCasa\033[30m: ').strip())
+
+            if int(esc) > 9 or int(esc) <= 0:
+                print('\033[30mDigite uma casa \033[31mválida\033[30m!\033[m')
+
+            elif esc not in listJOGADAS and esc not in lP:
+                listJOGADAS.append(esc)
+                lP.append(esc)
+                x = x.replace(esc, marcador)
+                print(x)
+                break
+
+            else:
+                print('\033[30mCASA JÁ OCUPADA / ESCOLHIDA')
+
+        ##VITÓRIA DO PLAYER
+        #horizontal
+        if '1' in lP and '2' in lP and '3' in lP or '4' in lP and '5' in lP and '6' in lP or '7' in lP and '8' in lP and '9' \
+                in lP:
+            win_player = True
+
+        #vertical
+        elif '1' in lP and '4' in lP and '7' in lP or '2' in lP and '5' in lP and '8' in lP or '3' in lP and '6' in lP and '9' \
+                in lP:
+            win_player = True
+
+        #diagonal
+        elif '1' in lP and '5' in lP and '9' in lP or '3' in lP and '5' in lP and '9' in lP:
+            win_player = True
+
+        if win_player is True:
+            quebra()
+            vitoria()
+            print(x)
+            print('\033[32mVOCÊ GANHOU!!!')
+            exit()
+
+        #robo
+        print('\033[31mEscravo do JP: \033[30mEstou escolhendo...')
+        sleep(2)
+        while True:
+            jogadaROBO = randint(1, 9)
+            string = str(jogadaROBO)
+            if string not in listJOGADAS and string not in lR:
+                print(f'\033[31mEscravo do JP: \033[30mEscolhi a casa {jogadaROBO}!')
+                sleep(2)
+                listJOGADAS.append(string)
+                lR.append(string)
+                x = x.replace(string, robo)
+                break
+            else:
+                pass
+
+        ##ROBO
+        #horizontal
+        if '1' in lR and '2' in lR and '3' in lR or '4' in lR and '5' in lR and '6' in lR or '7' in lR and '8' in lR and '9' \
+                in lR:
+            win_robo = True
+
+        #vertical
+        elif '1' in lR and '4' in lR and '7' in lR or '2' in lR and '5' in lR and '8' in lR or '3' in lR and '6' in lR and '9' \
+                in lR:
+            win_robo = True
+
+        #diagonal
+        elif '1' in lR and '5' in lR and '9' in lR or '3' in lR and '5' in lR and '9' in lR:
+            win_robo = True
+
+        if win_robo is True:
+            quebra()
+            derrota()
+            print(x)
+            print('\033[31mEscravo do JP: \033[30mGanhei HAHA!\033[m')
+            exit()
+
+
+jogo()
